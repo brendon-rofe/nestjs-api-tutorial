@@ -3,10 +3,10 @@ import { AuthDto } from "./dto";
 export declare class AuthController {
     private authService;
     constructor(authService: AuthService);
-    signin(dto: AuthDto): {
+    signup(dto: AuthDto): {
         msg: string;
     };
-    signup(): {
+    signin(): {
         msg: string;
     };
 }
