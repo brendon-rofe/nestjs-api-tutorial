@@ -16,11 +16,11 @@ let AuthService = class AuthService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    signin() {
-        return { msg: "Signing you in" };
-    }
     signup() {
         return { msg: "Signing you up" };
+    }
+    signin() {
+        return { msg: "Signing you in" };
     }
 };
 AuthService = __decorate([
