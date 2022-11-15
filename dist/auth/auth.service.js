@@ -14,9 +14,13 @@ const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
 const argon = require("argon2");
 const runtime_1 = require("@prisma/client/runtime");
+const dist_1 = require("@nestjs/jwt/dist");
+const config_service_1 = require("@nestjs/config/dist/config.service");
 let AuthService = class AuthService {
-    constructor(prisma) {
+    constructor(prisma, jwt, config) {
         this.prisma = prisma;
+        this.jwt = jwt;
+        this.config = config;
     }
     async signup(dto) {
         const hash = await argon.hash(dto.password);
@@ -50,13 +54,26 @@ let AuthService = class AuthService {
         const pwMatches = await argon.verify(user.hash, dto.password);
         if (!pwMatches)
             throw new common_1.ForbiddenException('Credentials incorrect');
-        delete user.hash;
-        return user;
+        return this.signToken(user.id, user.email);
+    }
+    async signToken(userId, email) {
+        const payload = {
+            sub: userId,
+            email
+        };
+        const secret = this.config.get('JWT_SECRET');
+        const token = await this.jwt.signAsync(payload, {
+            expiresIn: '15m',
+            secret: secret,
+        });
+        return {
+            access_token: token,
+        };
     }
 };
 AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService, dist_1.JwtService, config_service_1.ConfigService])
 ], AuthService);
 exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map
