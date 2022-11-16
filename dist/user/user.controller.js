@@ -11,15 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
+const guard_1 = require("../auth/guard");
 let UserController = class UserController {
-    getMe() {
-        return 'user info';
+    getMe(user) {
+        return user;
     }
 };
 __decorate([
+    (0, common_1.UseGuards)(guard_1.JwtGuard),
     (0, common_1.Get)('me'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "getMe", null);
 UserController = __decorate([
